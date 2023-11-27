@@ -1,0 +1,56 @@
+import heapq
+
+class Graph:
+    def __init__(self):
+        self.graph = {}
+
+    def add_edge(self, u, v, weight):
+        if u not in self.graph:
+            self.graph[u] = []
+        self.graph[u].append((v, weight))
+
+    def best_first_search(self, start, goal, heuristic):
+        visited = set()
+        pq = [(heuristic[start], start)]
+        
+        while pq:
+            _, current = heapq.heappop(pq)
+
+            if current in visited:
+                continue
+
+            print(current, end=' ')
+            visited.add(current)
+
+            if current == goal:
+                print("\nGoal reached!")
+                return
+
+            for neighbor, weight in self.graph.get(current, []):
+                if neighbor not in visited:
+                    heapq.heappush(pq, (heuristic[neighbor], neighbor))
+
+        print("\nGoal not reached.")
+
+# Example usage:
+if __name__ == "__main__":
+    g = Graph()
+
+    # Adding edges to the graph with weights
+    g.add_edge('A', 'B', 4)
+    g.add_edge('A', 'C', 2)
+    g.add_edge('B', 'D', 5)
+    g.add_edge('B', 'E', 10)
+    g.add_edge('C', 'F', 8)
+    g.add_edge('D', 'G', 7)
+    g.add_edge('E', 'H', 3)
+    g.add_edge('F', 'I', 1)
+    g.add_edge('G', 'J', 6)
+    g.add_edge('H', 'K', 9)
+    g.add_edge('I', 'L', 4)
+
+    # Heuristic function (for example, straight-line distance to the goal)
+    heuristic = {'A': 7, 'B': 6, 'C': 4, 'D': 2, 'E': 4, 'F': 4, 'G': 5, 'H': 2, 'I': 1, 'J': 0, 'K': 3, 'L': 0}
+
+    print("Best-First Search Path:")
+    g.best_first_search('A', 'L', heuristic)
